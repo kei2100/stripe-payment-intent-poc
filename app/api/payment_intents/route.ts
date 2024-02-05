@@ -5,6 +5,7 @@ export async function POST(request: Request) {
     customerId,
     paymentMethodId,
     amount,
+    useOffSession,
   } = await request.json()
 
   const createPaymentIntent: CreatePaymentIntent = {
@@ -18,8 +19,10 @@ export async function POST(request: Request) {
       customer: customerId,
       payment_method: paymentMethodId,
       confirm: true,
-      off_session: true
+      off_session: useOffSession,
+      return_url: useOffSession ? undefined : process.env.NEXT_PUBLIC_BASE_URL,
     });
+    
     createPaymentIntent.paymentIntent = {
       id: stripePaymentIntent.id,
       status: stripePaymentIntent.status,

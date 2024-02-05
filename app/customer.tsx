@@ -27,7 +27,7 @@ export const Customer: FC<{ id: string }> = ({ id }) => {
 
   return <div>
     <div>
-      <p>Customer id: {id}</p>
+      <p>Customer id: <a href={`https://dashboard.stripe.com/test/customers/${id}`}>{id}</a></p>
     </div>
     <div>
       <Script src="https://js.stripe.com/v3/"/>
