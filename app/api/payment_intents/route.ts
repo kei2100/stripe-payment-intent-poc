@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       off_session: useOffSession,
       return_url: useOffSession ? undefined : process.env.NEXT_PUBLIC_BASE_URL,
     });
-    
+
     createPaymentIntent.paymentIntent = {
       id: stripePaymentIntent.id,
       status: stripePaymentIntent.status,
