@@ -29,9 +29,9 @@ export const Customer: FC<{ id: string }> = ({ id }) => {
     <div>
       <p>Customer id: <a href={`https://dashboard.stripe.com/test/customers/${id}`}>{id}</a></p>
     </div>
-    <div>
-      <Script src="https://js.stripe.com/v3/"/>
-      <Elements stripe={stripePromise} options={stripeElementsOptions}>
+    <Script src="https://js.stripe.com/v3/"/>
+    <Elements stripe={stripePromise} options={stripeElementsOptions}>
+      <div>
         <CardForm
           customerId={id}
           clientSecret={clientSecret}
@@ -39,15 +39,15 @@ export const Customer: FC<{ id: string }> = ({ id }) => {
           setPaymentMethods={setPaymentMethods}
           setClientSecret={setClientSecret}
         />
-      </Elements>
-    </div>
-    <div>
-      {paymentMethods.map((paymentMethod) => {
-        return <div key={paymentMethod.id}>
-          <PaymentMethod customerId={id} paymentMethod={paymentMethod}/>
-        </div>
-      })}
-    </div>
+      </div>
+      <div>
+        {paymentMethods.map((paymentMethod) => {
+          return <div key={paymentMethod.id}>
+            <PaymentMethod customerId={id} paymentMethod={paymentMethod}/>
+          </div>
+        })}
+      </div>
+    </Elements>
   </div>
 }
 

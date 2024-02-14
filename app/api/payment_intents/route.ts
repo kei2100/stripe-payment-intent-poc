@@ -29,6 +29,7 @@ export async function POST(request: Request) {
     }
     return Response.json(createPaymentIntent);
   } catch (error) {
+    console.log(error) // error.payment_intent から、authentication_required 状態の payment_intent の id, client_secret などを参照することができる
     createPaymentIntent.error = error.toString()
     return Response.json(createPaymentIntent, { status: 500 })
   }
