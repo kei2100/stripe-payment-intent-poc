@@ -1,8 +1,8 @@
 import {Dispatch, FC, SetStateAction, useEffect, useState} from "react";
-import {PaymentMethod} from "./payment_method";
 import Script from "next/script";
 import {loadStripe} from "@stripe/stripe-js";
 import {CardElement, Elements, PaymentElement, useElements, useStripe} from "@stripe/react-stripe-js";
+import Link from "next/link";
 
 export const Customer: FC<{ id: string }> = ({ id }) => {
   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
@@ -29,9 +29,9 @@ export const Customer: FC<{ id: string }> = ({ id }) => {
     <div>
       <p>Customer id: <a href={`https://dashboard.stripe.com/test/customers/${id}`}>{id}</a></p>
     </div>
-    <Script src="https://js.stripe.com/v3/"/>
-    <Elements stripe={stripePromise} options={stripeElementsOptions}>
       <div>
+        <Script src="https://js.stripe.com/v3/"/>
+        <Elements stripe={stripePromise} options={stripeElementsOptions}>
         <CardForm
           customerId={id}
           clientSecret={clientSecret}
@@ -39,6 +39,7 @@ export const Customer: FC<{ id: string }> = ({ id }) => {
           setPaymentMethods={setPaymentMethods}
           setClientSecret={setClientSecret}
         />
+        </Elements>
       </div>
       <div>
         {paymentMethods.map((paymentMethod) => {
@@ -47,7 +48,6 @@ export const Customer: FC<{ id: string }> = ({ id }) => {
           </div>
         })}
       </div>
-    </Elements>
   </div>
 }
 
@@ -75,7 +75,6 @@ const CardForm: FC<{
     })
     if (error) {
       alert(error.message)
-      console.log(error)
       return
     }
     const paymentMethod = await attachPaymentMethod(customerId, setupIntent.payment_method as string)
@@ -86,6 +85,20 @@ const CardForm: FC<{
   return <div>
     <CardElement options={{ hidePostalCode: true }}/>
     <button onClick={onSubmitCreatePaymentMethod}>Create PaymentMethod</button>
+  </div>
+}
+
+const PaymentMethod: FC<{ customerId: string, paymentMethod: PaymentMethod }> = ({
+                                                                                   customerId,
+                                                                                   paymentMethod
+                                                                                 }) => {
+  return <div>
+    <div>
+      <p>PaymentMethod id: <Link href={`/payment_method/${paymentMethod.id}`}>{paymentMethod.id}</Link></p>
+      <p>
+        {paymentMethod.brand} ･･････{paymentMethod.last4} ({paymentMethod.expMonth}/{paymentMethod.expYear})
+      </p>
+    </div>
   </div>
 }
 

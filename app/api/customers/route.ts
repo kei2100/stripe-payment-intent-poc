@@ -6,7 +6,6 @@ export async function POST(request: Request) {
     const customer: Customer = { id: stripeCustomer.id }
     return Response.json(customer)
   } catch (error) {
-    console.error(error)
     return Response.json({}, { status: 500 })
   }
 }

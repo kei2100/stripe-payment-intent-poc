@@ -9,7 +9,6 @@ export async function GET(
     const customer: Customer = { id: stripeCustomer.id }
     return Response.json(customer)
   } catch (error) {
-    console.error(error)
     return Response.json({}, { status: 404 })
   }
 }
