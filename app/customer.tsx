@@ -13,7 +13,7 @@ export const Customer: FC<{ id: string }> = ({ id }) => {
   useEffect(() => {
     (async () => {
       setPaymentMethods(await getPaymentMethods(id))
-      setClientSecret((await createSetupIntent()).clientSecret)
+      setClientSecret((await createSetupIntent(id)).clientSecret)
     })()
   }, [])
 
@@ -79,7 +79,7 @@ const CardForm: FC<{
     }
     const paymentMethod = await attachPaymentMethod(customerId, setupIntent.payment_method as string)
     setPaymentMethods([paymentMethod, ...paymentMethods])
-    setClientSecret((await createSetupIntent()).clientSecret)
+    setClientSecret((await createSetupIntent(customerId)).clientSecret)
   }
 
   return <div>
@@ -107,8 +107,8 @@ async function getPaymentMethods(customerId: string): Promise<PaymentMethod[]> {
   return await res.json()
 }
 
-async function createSetupIntent(): Promise<SetupIntent> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/setup_intents`, {
+async function createSetupIntent(customerId: string): Promise<SetupIntent> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/customers/${customerId}/setup_intents`, {
     method: 'POST',
   })
   return await res.json()

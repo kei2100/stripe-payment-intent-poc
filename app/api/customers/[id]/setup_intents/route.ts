@@ -1,11 +1,11 @@
-import stripe from "../_lib/stripe";
+import stripe from "../../../_lib/stripe";
 
-export async function POST(request: Request) {
+export async function POST(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   const stripeSetupIntent = await stripe.setupIntents.create({
-    // automatic_payment_methods: {
-    //   enabled: true,
-    //   allow_redirects: 'never'
-    // }
+    customer: params.id,
   })
   const setupIntent: SetupIntent = { clientSecret: stripeSetupIntent.client_secret };
   return Response.json(setupIntent);
