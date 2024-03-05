@@ -68,6 +68,15 @@ const CardForm: FC<{
   const elements = useElements();
 
   async function onSubmitCreatePaymentMethod() {
+    // use legacy Token/Source API
+    // const tokenResponse = await stripe.createToken(elements.getElement(CardElement))
+    // if (tokenResponse.error) {
+    //   alert(tokenResponse.error.message)
+    //   return
+    // }
+    // const cardResponse = await createLegacyCard(customerId, tokenResponse.token.id)
+    // console.log(cardResponse)
+
     const { setupIntent, error } = await stripe.confirmCardSetup(clientSecret, {
       payment_method: {
         card: elements.getElement(CardElement),
@@ -110,6 +119,14 @@ async function getPaymentMethods(customerId: string): Promise<PaymentMethod[]> {
 async function createSetupIntent(customerId: string): Promise<SetupIntent> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/customers/${customerId}/setup_intents`, {
     method: 'POST',
+  })
+  return await res.json()
+}
+
+async function createLegacyCard(customerId: string, token: string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/customers/${customerId}/sources`, {
+    method: 'POST',
+    body: JSON.stringify({ token }),
   })
   return await res.json()
 }
