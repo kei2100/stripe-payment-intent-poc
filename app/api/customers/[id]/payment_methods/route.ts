@@ -25,6 +25,10 @@ export async function POST(
 ) {
   const { paymentMethodId } = await request.json()
 
+  // debug
+  const pm = await stripe.paymentMethods.retrieve(paymentMethodId);
+  console.log("payment method (before attach)", pm);
+
   const stripePaymentMethod = await stripe.paymentMethods.attach(paymentMethodId,
     { customer: params.id }
   );
